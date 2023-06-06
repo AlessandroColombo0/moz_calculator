@@ -1,0 +1,60 @@
+{% load static %}
+
+<html>
+  <head>
+    <title>Text Rewriter</title>
+
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+
+  </head>
+  <body>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  var inputText = document.getElementById("inputText");
+  var rewrittenText = document.getElementById("rewrittenText");
+
+  inputText.addEventListener("input", function() {
+    var text = inputText.value;
+    rewriteText(text)
+      .then(function(processedText) {
+        rewrittenText.textContent = processedText;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  });
+
+  function rewriteText(text) {
+    var formData = new FormData();
+    formData.append("text", text);
+
+    return fetch('{% url "ajax-text" %}', {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": '{{ csrf_token }}'
+      },
+      body: formData
+    })
+      .then(function(response) {
+        return response.json(); // Parse the response as JSON
+      })
+      .then(function(data) {
+        return data.text; // Extract the text value from the response object
+      })
+      .catch(function(error) {
+        throw error; // Re-throw the error to be caught in the calling code
+      });
+  }
+});
+</script>
+<!--        return text;-->
+
+    <textarea id="inputText" rows="4" cols="50"></textarea>
+    <br>
+    <p id="rewrittenText"></p>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,50 @@
+# TESTING
+
+# NESSUNA FORMA DI INDECISIONE
+# a, steps = calc_lim("x^2 - 3x", "-inf")  # V
+# a, steps = calc_lim("x^2 - 3x", 10)  # V
+# a, steps = calc_lim("x^2 - 3x", -10)  # V
+# a, steps = calc_lim("x^2 / 3x", -10)  # V
+
+# RESULT = INF, DETERMINARE IL SEGNO
+# a, steps = calc_lim("(x + 2) / (36 - x^2)", -6)  # V
+# a, steps = calc_lim("(x + 5) / (x^2 - 1)", 1)    # V
+# a, steps = calc_lim("(3 + x) / (4 - x^2)", 2)    # V
+# a, steps = calc_lim("4 + x + x^3", "-inf")  # V
+
+# RESULT = INF / INF
+# a, steps = calc_lim("(x^2 - x^4) / (3 + x^3)", "+inf")  # V
+# a, steps = calc_lim("(3 + x^3) / (x^2 - x^4)", "+inf")  # V
+# a, steps = calc_lim("(4 + -3x^3 + x^4 - 4x - 4 - 10 + 3x^2 + 6 + 4x + 5x) / (-2x^3 - x^2)", "+inf")  # V
+# a, steps = calc_lim("(-3x^3 + x + x) / (-2x^3 - x^2)", "+inf")  # V
+# a, steps = calc_lim("(x^2 + 6x + 5) / (x^5 + 4)", "-inf")  # V
+# a, steps = calc_lim("(1 - 10x^2) / (4x^2 - 1)", "-inf")  # V
+# a, steps = calc_lim('((1 - 10x^3 - 5x^1) / (4x^2 - 1))', "-inf")  #V
+
+# RESULT = INF - INF
+# a, steps = calc_lim("x^2 - x^4", "+inf")  # V
+# a, steps = calc_lim("-3x^3 + x + 4", "+inf")  # V
+# a, steps = calc_lim("3x^3 + -x", "+inf")  # V
+# a, steps = calc_lim("x^2 + x + 3", "-inf")  # V
+
+# RESULT = 0 / 0
+# scomposizione:
+# expression = "x^2 + 9x + 20"  # V
+# expression = "3x^2 - 7x - 6"  # V
+# expression = "x^2 + 8x + 15"  # V
+# expression = "3x^2 + 8x - 3"  #V
+# expression = "x^2 + 5x + 6"  #V
+# expression = "x^2 + 6x + 9"  #V
+# a, steps = calc_lim("(2x^2 - x - 30) / (2x^2 - x - 3)", 1.5)  # test
+# a, steps = calc_lim("(x^2 - 1) / (10x^2 + 30x - 40)", 1)
+# a, steps = calc_lim("(x^2 - x) / (10x^2 + 30x - 40)", 1)
+# a, steps = calc_lim("(x^4 - x^3) / (10x^2 + 30x - 40)", 1)
+# a, steps = calc_lim("(25 - x^2) / (x^2 + x - 30)", 5)  # 10/11
+# a, steps = calc_lim("(x^2 - 1) / (2x^2 + 3x + 1)", -1)  # 2
+# a, steps = calc_lim("(x^2 - 1) / (3x^2 + 13x + 12)", -1)  # 2
+
+a, steps = calc_lim("(x^2 - 25) / (x^2 + x - 30)", 5)  # 10/11  # V
+x^2 + x - 30 = 6 -5
+x + 5  x - 5
+
+# a, steps = calc_lim("(x^2 - 1) / (2x^2 + 3x + 1)", -1)  # 2  # V

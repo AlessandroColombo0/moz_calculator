@@ -1,0 +1,137 @@
+{% load static %}
+{% include "header.html" %}
+
+
+
+
+{% block body %}
+
+
+<div class="secondo-body">
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+		  var input_limite = document.getElementById("input_limite");
+		  var rewritten_espressione = document.getElementById("rewritten_espressione");
+		  var input_espressione = document.getElementById("input_espressione");
+		  var rewritten_lim = document.getElementById("rewritten_lim");
+
+		  rewriteText(input_limite.value, rewritten_lim, "lim");
+		  rewriteText(input_espressione.value, rewritten_espressione, "expr");
+
+		  input_limite.addEventListener("input", function() {
+			var text = input_limite.value;
+			rewriteText(text, rewritten_lim, "lim");
+		  });
+
+		  input_espressione.addEventListener("input", function() {
+			var text = input_espressione.value;
+			rewriteText(text, rewritten_espressione, "expr");
+		  });
+
+		  function rewriteText(text, outputElement, type) {
+			var formData = new FormData();
+			formData.append("text", text);
+			formData.append("type", type);
+
+			fetch('{% url "ajax-text" %}', {
+			  method: "POST",
+			  headers: {
+				"X-CSRFToken": '{{ csrf_token }}'
+			  },
+			  body: formData
+			})
+			  .then(function(response) {
+				return response.json(); // Parse the response as JSON
+			  })
+			  .then(function(data) {
+				var processedText = data.text; // Extract the text value from the response object
+				outputElement.innerHTML = processedText; // Update the output element with the processed text
+			  })
+			  .catch(function(error) {
+				console.log(error);
+			  });
+		  }
+		});
+	</script>
+
+	<h1>Calcolo dei limiti</h1>
+
+	<br>
+	<form action="" method="POST">
+		{% csrf_token %}
+
+		<div class="split-limiti-dx">
+			<div class="col-3 input-effect">
+				<input class="effect-16" type="text" value="{{ expr }}" name="expr" placeholder=" " id="input_espressione">
+					<label class=".f-label">Espressione</label>
+					<span class="focus-border"></span>
+			</div>
+		</div>
+
+		<div class="split-limiti-sx">
+			<div class="col-3 input-effect">
+				<input class="effect-16" type="text" value="{{ lim }}" name="lim" placeholder=" " id="input_limite">
+					<label class=".f-label">Limite</label>
+					<span class="focus-border"></span>
+			</div>
+		</div>
+
+		<input type="submit" hidden />
+	</form>
+
+
+	<div class="split-limiti-dx">
+		<div class="math-expr">
+			<p id="rewritten_espressione"></p>
+		</div>
+	</div>
+
+	<div class="split-limiti-sx" style="float: right">
+		<div class="math-expr">
+    		<p id="rewritten_lim"></p>
+		</div>
+	</div>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+
+
+
+	<div class="graph-container">
+	{{plot|safe}}
+		<div class="expr-over"><div class="math-expr">{{ func_expr | safe }}</div></div>
+	</div>
+
+	{% if steps %}
+		<h2>Passaggi</h2>
+	{% endif %}
+
+	{% for step in steps %}
+	<div class="">
+		<div class="expr-desc">
+			<p>{{ step.desc }}</p>
+		</div>
+
+		<div class="math-expr">
+			{{ step.lim | safe }}
+			{{ step.expr | safe }}
+		</div>
+
+	</div>
+	<br>
+	{% endfor %}
+
+	<br>
+	<br>
+	<br>
+
+
+
+</div>
+{% endblock body %}
+
+
+

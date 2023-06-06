@@ -1,0 +1,258 @@
+:root {
+    --c-rosso-acceso: #ff004c;
+    --c-rosso-scuro: #b00e39;
+    --c-rosso-smorto: #944a5b;
+    --c-bianchino: #f4f4f4;
+    --c-grigio-scuro: rgb(10%, 10%, 10%);
+    --f-titolo: 'Rubik', sans-serif;
+    --f-roboto: 'Roboto', sans-serif;
+    --f-roboto-mono: 'Roboto Mono', monospace;
+}
+
+
+body {
+    background-color: var(--c-bianchino);
+    font-family: var(--f-roboto);
+    color: #000000;
+    margin: 0px;
+}
+
+.secondo-body {
+    background-color: var(--c-bianchino);
+    font-family: var(--f-roboto-mono);
+    color: var(--c-grigio-scuro);
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+
+.paragrafo {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20%;
+    padding-right: 20%;
+    font-size: 200px;
+}
+
+
+.titles-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+}
+
+.titles-container + .secondo-body {
+  padding-top: 140px;
+}
+
+.titolo {
+    color: #fff;
+    background-color: var(--c-rosso-acceso);
+    font-family: var(--f-titolo);
+    font-weight: bold;
+    font-size: 35px;
+    padding: 20px;
+    padding-left: 40px;
+    box-shadow: 4px 4px 4px 4px rgba(0,0,0,0.2);
+    z-index: 3;
+
+}
+
+.sottotitolo {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    background-color: var(--c-rosso-scuro);
+    font-family: var(--f-titolo);
+
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 4px 4px 4px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+
+h1 {
+    font-family: var(--f-titolo);
+    font-weight: normal;
+    font-size:40px;
+}
+
+h2 {
+    font-family: var(--f-titolo);
+    font-weight: normal;
+    font-size:32px;
+}
+
+.risultato {
+    color: var(--c-rosso-acceso)
+}
+
+
+a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+    color: white;
+    text-decoration: none;
+}
+
+.sottotitolo a::before {
+    color: white;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background-color: #fff;
+    bottom: 0;
+    left: 0;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .3s ease-in-out;
+  }
+
+.sottotitolo a:hover::before {
+    color: white;
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+
+/* MATH */
+
+
+.expr-over {
+  position: absolute;
+  top: 10;
+  left: 35;
+  color: var(--c-rosso-scuro)
+}
+
+.graph-container {
+    position: relative;
+}
+
+.math-expr{
+    font-size: 28px;
+    display: inline-block;
+}
+
+math{
+    display: inline-block;
+}
+
+.expr-div {
+    font-size: 34px;
+    display: inline-block;
+
+}
+
+.expr-desc{
+    color: var(--c-rosso-scuro)
+}
+
+
+/* Split Text box calcolo limiti */
+
+.split-limiti-sx {
+    height: 30px;
+    width: 100px;
+    display: inline-block;
+}
+
+.split-limiti-dx {
+    height: 30px;
+    /* calc ci permette di fare una percentuale - pixels, in questo modo possiamo fare in modo che la il div destro
+     sia sempre a 30 px di distanza dal primo e che copra il 100% di quello ch epuò coprire*/
+    width: calc(100% - 130px);
+    display: inline-block;
+    float: right;
+}
+
+
+
+
+/* TEXT BOX "Espressione"  */
+
+:focus{outline: none;}
+
+/* necessary to give position: relative to parent. */
+input[type="text"]{
+    font: 15px/24px;
+    width: 100%;
+    border-box;
+}
+
+:focus{
+    outline: none;
+}
+
+.col-3{
+    float: left;
+    width: 100%;
+    color: var(--c-rosso-scuro);
+    position: relative;
+    z-index: 1;
+    font-size: 25px;
+} /* necessary to give position: relative to parent. */
+
+
+/* Testo all'interno della text box: */
+input[type="text"]{
+    font: 15px/24px var(--f-roboto-mono);
+    font-size: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+
+
+/* Textbox (unfocused) */
+.effect-16 {
+    border: 0;
+    padding: 4px 0;
+    border-bottom: 3px solid var(--c-rosso-scuro);
+    background-color: transparent;
+}
+
+/* bordino che slitta dentro */
+.effect-16 ~ .focus-border{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--c-rosso-acceso);
+    transition: 0.5s;
+}
+
+.effect-16:focus ~ .focus-border, .effect-16:not(:placeholder-shown) ~ .focus-border{
+    width: 100%;
+    transition: 0.5s;
+}
+
+/* scritta "Espressione", cioè la label della text box */
+.effect-16 ~ label{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 9px;
+    transition: 0.5s;
+    z-index: -1;
+    letter-spacing: 0.5px;
+}
+.effect-16:focus ~ label, .effect-16:not(:placeholder-shown) ~ label{
+    top: -20px;
+    font-size: 16px;
+    color: var(--c-rosso-acceso);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+
