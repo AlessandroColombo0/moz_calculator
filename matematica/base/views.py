@@ -1,5 +1,6 @@
 from django.shortcuts import render
 # no
+# no
 
 # from .models import Parte, Commento, Utente   #importiamo dal database
 # from .forms import Form_Reg_Utente
