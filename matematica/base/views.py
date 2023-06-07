@@ -101,8 +101,11 @@ def ajax_text2math(request):
 
     elif request.POST["type"] == "lim":
         try:
-            lim = calcolo.lim_to_obj(text)
-            text = calcolo.lim_to_html(lim)
+            if text == "":
+                pass
+            else:
+                lim = calcolo.lim_to_obj(text)
+                text = calcolo.lim_to_html(lim)
 
         except Exception as exc:
             ic(exc)
