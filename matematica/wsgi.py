@@ -16,4 +16,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "matematica.settings")
 application = get_wsgi_application()
 
 # per vercel: .vercel.app
-app = application
+# app = application
