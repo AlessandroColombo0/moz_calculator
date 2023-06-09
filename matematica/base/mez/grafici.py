@@ -14,7 +14,7 @@ from . import calcolo, Mat
 
 
 def grafico_funzione(base_form_lambda, lim, x_disconts, result):
-    ic(x_disconts)
+    # ic(x_disconts)
     # ic([str(i) for i in x_disconts])
     specie2_x_discont_nums = [x.as_decimal() for x in x_disconts["specie2"]]
     specie2_x_discont_nums.sort()
@@ -57,7 +57,7 @@ def grafico_funzione(base_form_lambda, lim, x_disconts, result):
     discontinuity_epsilon = 0.001
 
     for i_r in range(len(ranges))[:-1]:
-        ic(ranges)
+        # ic(ranges)
         diff = abs(ranges[i_r]) + abs(ranges[i_r+1])
 
         no_disc_X_ranges.append(np.linspace(ranges[i_r] + 0.15, ranges[i_r+1] - 0.15,
@@ -111,8 +111,8 @@ def grafico_funzione(base_form_lambda, lim, x_disconts, result):
 
     # DISCONTINUITà 3 SPECIE
     for x_disc, y_val in x_disconts["specie3"]:
-        ic(x_disc)
-        ic(y_val)
+        # ic(x_disc)
+        # ic(y_val)
 
         x_disc_num = x_disc.as_decimal()
 
@@ -122,8 +122,8 @@ def grafico_funzione(base_form_lambda, lim, x_disconts, result):
                                  meta=[f"Discontinuità di 3° specie in x={x_disc.fancy_str()}"], hovertemplate="<b>%{meta[0]}</b>"))
 
     # LIM MARKER
-    ic(str(type(lim)))
-    ic(str(type(result)))
+    # ic(str(type(lim)))
+    # ic(str(type(result)))
     if "Inf'>" not in str(type(result)) and "Inf'>" not in str(type(lim)) and result != None:
         y_val = result.as_decimal()
         fig.add_trace(go.Scatter(x=[lim_num], y=[y_val], mode="markers",

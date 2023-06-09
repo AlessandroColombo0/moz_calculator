@@ -70,7 +70,6 @@ def lim_to_obj(lim_str):
     lim_str = lim_str.replace("inf", inf_sym)
 
     if inf_sym in lim_str:
-        ic(inf_sym)
         return Inf(False) if "-" in lim_str else Inf(True)
     else:
         return str_to_infcomp(lim_str)
@@ -96,7 +95,6 @@ def create_evaluable_exp(base_expression, x=None, solve=False):
         else:
             valid_expression_split.append(i)
 
-    # ic(valid_expression_split)
 
     return " ".join(valid_expression_split)
 
@@ -118,7 +116,6 @@ def calc_lim(expression, lim):
 
     def substitution(expression, x, append_steps=True, return_expr=False):
         solve_expr = expression.add_solve(x)
-        ic(solve_expr.to_str())
 
         # solve_expr = add_solve(expression, x)
 
@@ -126,13 +123,10 @@ def calc_lim(expression, lim):
         if append_steps:
             fs_steps.append(HTML_step(desc="sostituzione delle variabili con il limite", expr=solve_expr))
 
-        # ic(solve_expr.to_str())
-
         return solve_expr.eval(return_expr=return_expr), fs_steps
 
     # primo step, arriveremo a una forma di indecisione, inf, o il risultato finale (in caso non ci siano forme di indecisione o inf)
     substitution_result, fs_steps = substitution(base_form_expr, lim, return_expr=False)
-    ic(substitution_result)
     steps.append(fs_steps[0])
 
     steps.append(HTML_step(desc="Calcolo del risultato della sostituzione", expr=substitution_result))
@@ -150,7 +144,6 @@ def calc_lim(expression, lim):
             lim = InfComp_num(lim.num, lim.den, False if i == 0 else True)
             results_list[i].append(HTML_step(desc="Riscrittura dell'espressione", expr=base_form_expr, lim=lim))
             result, fs_steps = substitution(base_form_expr, lim)
-            # ic(result)
             results_list[i].append(fs_steps[0])
             results_list[i].append(HTML_step(desc="Calcoli", expr=result))
 
@@ -191,8 +184,6 @@ def calc_lim(expression, lim):
             steps.append(HTML_step("Sostituzione dei termini rimanenti con il limite", expr=solve2_fact_expr))
 
             result = solve2_fact_expr.eval()
-            # ic(result.to_str())
-            # ic(result.list_repr[0][0][0].to_html())
             steps.append(HTML_step("Calcoli", expr=result))
 
 
@@ -201,20 +192,15 @@ def calc_lim(expression, lim):
 
         steps.append(HTML_step(desc="riscrizione dell'espressione", expr=base_form_expr))
 
-        ic("\n\nA")
         factorized_expr = base_form_expr.to_factorized()
         steps.append(HTML_step(desc="scomposizione di numeratore e denominatore", expr=factorized_expr))
 
         simp_expr = factorized_expr.simplify_fraction()
-        # ic(simp_expr.list_repr)
         steps.append(HTML_step(desc="semplificazione tra numeratore e denominatore", expr=simp_expr))
 
-
         solve_expr = simp_expr.add_solve(lim)
-        # ic(solve_expr)
         steps.append(HTML_step(desc="sostituzione usando il limite", expr=solve_expr))
         result = solve_expr.eval()
-        ic(solve_expr.to_str())
         steps.append(HTML_step(desc="Calcoli", expr=result))
 
 
@@ -234,13 +220,11 @@ def calc_lim(expression, lim):
 
         # la calcoliamo solo se non abbiamo già scomposto il denominatore (succede solo nella indecisione 0/0)
         sep_factorized_expr = base_form_expr.to_factorized(separation=True)
-        ic(sep_factorized_expr.to_str())
 
         y_0s = [[], []]  # conterrà tutti i numeri che rendono y = 0, idx 0 num, idx 1 den
 
         for i_nd, nd in enumerate(sep_factorized_expr.list_repr):  # selezioniamo il denominatore
             for i_tg, tg in enumerate(nd):
-                # ic([str(i) for i in tg])
                 y_0s[i_nd].append([])
 
                 # 1 TERMINE
@@ -250,7 +234,6 @@ def calc_lim(expression, lim):
 
                 # 2 TERMINI, X = N
                 elif len(tg) == 2:
-                    # ic([str(i) for i in tg])
                     expo = tg[0].exponent
                     coeff = tg[0].coefficient
 
@@ -264,15 +247,10 @@ def calc_lim(expression, lim):
 
                 # 3 TERMINI, X1,2 = ...
                 elif len(tg) == 3:
-                    # ic(tg)
-                    # ic([str(i) for i in tg])
                     if tg[0].exponent == 2 and tg[1].exponent == 1 and type(tg[2]) == InfComp_num:
                         a = tg[0].coefficient
-                        # ic(str(a))
                         b = tg[1].coefficient
-                        # ic(str(b))
                         c = tg[2]
-                        # ic(str(c))
 
                         delta = (b**2 - a*c*4).root(2)
 
@@ -281,32 +259,23 @@ def calc_lim(expression, lim):
                                 delta = delta[0]
 
                             x1 = (-b + delta) / (a*2)
-                            # ic(delta)
-                            # ic(a)
-                            # ic(b)
-                            # ic(str(x1))
                             x2 = (-b - delta) / (a*2)
 
                             y_0s[i_nd][i_tg].append(x1)
                             y_0s[i_nd][i_tg].append(x2)
 
-        ic(y_0s)
 
         # numeratori e denominatori, ci serve per sapere se degli elementi del numeratore sono anche nel denominatore
         nd_strIcns = [[str(icn) for tg in y_0s[0] for icn in tg], [str(icn) for tg in y_0s[1] for icn in tg]]
 
         all_strIcns = set([j for i in nd_strIcns for j in i])
-        ic(all_strIcns)
 
         disconts_2 = set()
         disconts_3 = set()
 
         for strIcn in all_strIcns:
-            ic(strIcn)
             num_count = nd_strIcns[0].count(strIcn)
-            ic(num_count)
             den_count = nd_strIcns[1].count(strIcn)
-            ic(den_count)
 
             # if strIcn == str(InfComp_num(0)):
             #     if num_count > 0 and den_count > 0:
@@ -325,55 +294,10 @@ def calc_lim(expression, lim):
         x_disconts["specie3"] = []
         factorized_expr = factorized_expr if factorized_expr != None else base_form_expr.to_factorized()
         simplified_expr = factorized_expr.simplify_fraction()
-        ic(simplified_expr.to_str())
         for x in disconts_3:
             eval_x = eval(x)
             solve_expr = simplified_expr.add_solve(eval_x)
-            ic(solve_expr.to_str())
             y_value = solve_expr.eval(return_expr=False)
-            ic(y_value)
-
-            # ic(str(x))
-            # ic([str(i) for i in y_0s[0]])
-            # ic([str(i) for i in y_0s[1]])
-            # # ic(y_0s)
-            #
-            # num_tgs_idxs = [i for i, x1 in enumerate(y_0s[0]) if x1 == [x]]
-            # ic(num_tgs_idxs)
-            # den_tgs_idxs = [i for i, x1 in enumerate(y_0s[1]) if x1 == [x]]
-            # ic(den_tgs_idxs)
-            #
-            # # den: x * x, num: x
-            # if len(den_tgs_idxs) > len(num_tgs_idxs):
-            #     den_tgs_idxs = den_tgs_idxs[:len(num_tgs_idxs)]
-            # # den: x, num: x * x
-            # elif len(den_tgs_idxs) < len(num_tgs_idxs):
-            #     num_tgs_idxs = num_tgs_idxs[:len(den_tgs_idxs)]
-            #
-            #
-            # list_repr = copy.deepcopy(factorized_expr.list_repr)
-            # ic(Expression(list_repr=list_repr).to_str())
-            #
-            # list_repr[0] = [tg for i, tg in enumerate(list_repr[0]) if i not in num_tgs_idxs]
-            # list_repr[1] = [tg for i, tg in enumerate(list_repr[1]) if i not in den_tgs_idxs]
-            #
-            # # se sono state semplificate fino a perdere l'unico termine allora deve esserci 1 al posto di quel termine
-            # list_repr[0] = list_repr[0] if list_repr[0] else [[InfComp_num(1)]]
-            # list_repr[1] = list_repr[1] if list_repr[1] else [[InfComp_num(1)]]
-            #
-            # # icn_x = InfComp_num(x[0], x[1])
-            # eval_x = eval(x)
-            #
-            # x_expr = Expression(list_repr=[list_repr[0], list_repr[1]])
-            # # ( ( Factor(InfComp_num(1.0,1),1.0) + InfComp_num(1.0,1) ) * ( Factor(InfComp_num(1.0,1),1.0) + InfComp_num(-2.0,1) ) ) / \
-            # # ( ( Factor(InfComp_num(-1.0,1),1.0) + InfComp_num(2.0,1) ) )
-            #
-            #
-            # ic(x_expr.to_str())
-            # solve_exp = x_expr.add_solve(eval_x)
-            # ic(solve_exp.to_str())
-            # y_value = solve_exp.eval(return_expr=False)
-            # ic(str(y_value))
 
             x_disconts["specie3"].append([eval_x, y_value])
 

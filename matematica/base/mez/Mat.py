@@ -69,7 +69,6 @@ blank_char = "⠀"
 
 def is_square(term):
     def is_square_only_nums(num):
-        # ic(num)
         num_sqrt = int(num**0.5)  # **0.5: square root
         return num_sqrt * num_sqrt == num
 
@@ -209,7 +208,6 @@ def add_solve(exp, x):
     """
     exp = f" {exp} "
     exp_split = exp.split(" ")
-    # ic(exp_split)
     factors = [i for i in exp_split if "Factor(" in i]
     for factor in factors:
         exp = exp.replace(f" {factor} ", f" {factor}.solve({x}) ")
@@ -218,24 +216,16 @@ def add_solve(exp, x):
 
 
 def separate_ops_and_terms(exp):
-    # ic(exp)
     exp = str(exp).strip()
-    # ic(exp)
-    # ic(exp)
     exp = retract_parenthesis(exp)  # compattare tutte le parentesi per poi isolare i singoli elementi
 
     step_split = exp.split(" ")
-    # ic(step_split)
     objs = [exp for exp in step_split if any([obj in exp for obj in str_classes_list])]
     p_step_split = [cleanse_exp(i, opposite=True) if i in objs else i for i in step_split]
-    # ic(p_step_split)
     p_step_split = [i for i in p_step_split if i != ""]
-    # ic(p_step_split)
-    # ic(exp)
 
     if len(p_step_split) > 0:
         # idx_counter = 0 if p_step_split[0] in "*/" else 1  # se p_step_split inizia con * o / allora il primo elemento deve essere un termine
-        # ic(idx_counter)
 
         masked_step_list = []  # solo i segni, dove c'è la virgola vuol dire che lì ci va un comp
         skip = False
@@ -271,8 +261,6 @@ def separate_ops_and_terms(exp):
 
 
 def concatenate_lists(list1, list2):
-    # ic(list2)
-    # ic(list1)
     """  list1 = ['f', 'o', 'o'], list2 = ['hello', 'world']
     out: ['f', 'hello', 'o', 'world', 'o'] """
 
@@ -285,23 +273,18 @@ def concatenate_lists(list1, list2):
 
 
 def exp_to_sorted_comps(expression, return_signs=True):
-    # ic(expression)
     """ "( ( InfComp_num(1, None) - Factor(10x^3) ) - ( Factor(5x^1) ) )"  ->  [InfComp_num(1, None), '+', Factor("-10x^3"), '+', Factor("-5x^1")] """
 
     ops, terms = separate_ops_and_terms(expression)
-    # ic(terms)
-    # ic(ops)
 
     if len(ops) > len(terms):
         expression_list = concatenate_lists(ops, terms)
     else:
         expression_list = concatenate_lists(terms, ops)
-    # ic(expression_list)
     """ expression_list: InfComp_num(1, None), '-', Factor("10x^3"), '-', Factor("5x^1") """
 
 
     expression_list = [eval(cleanse_exp(i)) if any(j in i for j in str_classes_list) else i for i in expression_list]
-    # ic([str(i) for i in expression_list])
     # expression_list = [i.replace("(", "").replace(")", "") if type(i) == str else i for i in expression_list]
     expression_list = [i for i in expression_list if type(i) in classes_list or i.strip() != ""]
 
@@ -312,7 +295,6 @@ def exp_to_sorted_comps(expression, return_signs=True):
     double_pars_idxs = []
     open = False
     for i, comp in enumerate(expression_list):
-        # ic(comp)
         if type(comp) == str and "( " in comp:
             open = True
             opening_par_idxs.append(i)
@@ -343,7 +325,6 @@ def exp_to_sorted_comps(expression, return_signs=True):
             append_plus_at_idx.append(par_idx-1)
 
     expression_list = [comp for i, comp in enumerate(expression_list) if i not in deletion_idxs]
-    # ic(expression_list)
     for i in append_plus_at_idx:
         expression_list.insert(i, "+")
 
@@ -351,7 +332,6 @@ def exp_to_sorted_comps(expression, return_signs=True):
     # for i in range(len(expression_list)):
     #     if type(expression_list[i]) in classes_list and type(expression_list[i+1]) in classes_list:
 
-    # ic([str(i) for i in expression_list])
 
     # riscrittura dell'espressione usando solo i + e mettendo i - ai coefficienti, es: 1 - Factor(2x) -> 1 + Factor(-2x), in questo modo è tutto uniforme
     terms = []
@@ -364,7 +344,6 @@ def exp_to_sorted_comps(expression, return_signs=True):
 
             elif i == 0:  # primo elemento
                 terms.append(elem)
-                # ic(elem)
     """ [InfComp_num(1, None), Factor("-10x^3"), Factor("-5x^1")] """
 
 
@@ -600,7 +579,6 @@ class InfComp_num():
                 epsilon = self.get_opposite_epsilon(self.num_as_state(self.epsilon_as_num + y.epsilon_as_num))
             elif self.num_representation < 0 and y.num_representation > 0:  # -1 1
                 epsilon = self.num_as_state(self.epsilon_as_num - y.epsilon_as_num)
-                ic(epsilon)
             elif self.num_representation > 0 and y.num_representation < 0:  # 1 -1
                 epsilon = self.num_as_state(y.epsilon_as_num - self.epsilon_as_num)
             else:  # 0
@@ -621,8 +599,6 @@ class InfComp_num():
 
 
     def __truediv__(self, y):
-        # ic(str(y))
-        # ic(str(self))
         y = num_to_InfComp(y)
 
         # INFCOMP
@@ -637,7 +613,6 @@ class InfComp_num():
                     epsilon = self.get_opposite_epsilon(self.num_as_state(self.epsilon_as_num - y.epsilon_as_num))
                 elif self.num_representation < 0 and y.num_representation > 0:  # -1 1
                     epsilon = self.num_as_state(self.epsilon_as_num + y.epsilon_as_num)
-                    ic(epsilon)
                 elif self.num_representation > 0 and y.num_representation < 0:  # 1 -1
                     epsilon = self.num_as_state(y.epsilon_as_num + self.epsilon_as_num)
                 else:  # 0
@@ -664,7 +639,6 @@ class InfComp_num():
         # INF
         elif type(y) == Inf:
             epsilon = True if y.num_representation * self.num > 0 else False
-            ic(epsilon  )
             return InfComp_num(0, epsilon=epsilon)
 
         elif type(y) == ExpressionString:
@@ -680,16 +654,12 @@ class InfComp_num():
         return InfComp_num(self.num**y, self.den**y, self.epsilon).simplify()
 
     def root(self, root_num):
-        ic(str(self))
-        ic(root_num)
         icn = abs(self)
         icn = InfComp_num(num=icn.num**(1/root_num), den=icn.den**(1/root_num))
 
         # radice pari
         if root_num % 2 == 0:
             # numero pos
-            ic(str(icn))
-            ic(self.num_representation)
             if self.num_representation > 0:
                 return [icn, -icn]
             # numero neg
@@ -981,7 +951,6 @@ class Inf():
 
         elif type(y) == Expression:
             resulting_expr = Expression(list_repr=[[[self]]]) / y
-            # ic(resulting_expr.list_repr)
             resulting_expr.indeterm_type = "Inf_div_Inf"
             return resulting_expr
 
@@ -1018,10 +987,7 @@ class ExpressionString(str):
 
 
     def to_html(self):
-        # ic(self)
         a = Expression(str_exp=self)
-        # ic(a.list_repr)
-        # ic(a.to_str())
         return a.to_html(nested=True)
 
 
@@ -1048,10 +1014,8 @@ class Expression():
                 self.list_repr.append([])
 
                 for term_group in num_den.split(" * "):
-                    # ic(term_group)
 
                     self.list_repr[i_nd].append(exp_to_sorted_comps(cleanse_exp(term_group), return_signs=False))
-                    # ic(self.list_repr[i_nd])
 
         else:
             self.list_repr = list_repr
@@ -1124,13 +1088,10 @@ class Expression():
 
 
     def to_base_form(self):
-        # ic(self.list_repr)
         list_repr = copy.deepcopy(self.list_repr)
-        # ic(list_repr)
 
         for i_nd, num_denum in enumerate(self.list_repr):
             new_terms = [i for i in num_denum[0]]
-            # ic(new_terms)
 
             if len(num_denum) > 1:
                 for i_tg, term_group in enumerate(num_denum[1:]):
@@ -1141,10 +1102,8 @@ class Expression():
                     for new_t in new_terms:
                         for next_t in next_terms:
                             mul_terms.append(new_t*next_t)
-                    # ic(mul_terms)
 
                     new_terms = self.list_algebraic_sum(mul_terms)
-                    # ic(new_terms)
             else:
                 new_terms = self.list_algebraic_sum(new_terms)
 
@@ -1156,7 +1115,6 @@ class Expression():
 
     def expr_algebraic_sum(self):
         list_repr = copy.deepcopy(self.list_repr)
-        # ic(list_repr)
 
         for i_nd, num_denum in enumerate(self.list_repr):
             for i_tg, term_group in enumerate(num_denum):
@@ -1194,7 +1152,6 @@ class Expression():
 
         while simplify_further:
             abs_expr = simplified_expr.apply_function(abs)
-            ic(abs_expr.to_str())
 
             abs_str_num = [[str(t) for t in tg] for tg in abs_expr.list_repr[0]]
             abs_str_den = [[str(t) for t in tg] for tg in abs_expr.list_repr[1]]
@@ -1248,28 +1205,21 @@ class Expression():
 
                 for idx_couple in same_abs_tgs_idxs:
                     num_tg = simplified_expr.list_repr[0][idx_couple[0]]
-                    ic([str(i) for i in num_tg])
                     den_tg = simplified_expr.list_repr[1][idx_couple[1]]
-                    ic([str(i) for i in den_tg])
 
                     mask_numTg = [term2maskNum(i) for i in num_tg]
-                    ic(mask_numTg)
                     mask_denTg = [term2maskNum(i) for i in den_tg]
-                    ic(mask_denTg)
                     mask_neg_denTg = [i * -1 for i in mask_denTg]
-                    ic(mask_neg_denTg)
 
                     count_num_tgs = len(simplified_expr.list_repr[0])
                     count_den_tgs = len(simplified_expr.list_repr[1])
 
                     if mask_denTg == mask_numTg:
-                        ic("\n\nB")
                         simplified_num_tg_idx = idx_couple[0]
                         simplified_den_tg_idx = idx_couple[1]
                         break
                     elif mask_neg_denTg == mask_numTg and sum([count_den_tgs, count_num_tgs]) > 2:  # se è inverso ma solo in caso ha almeno un
                             # altro tg su cui scaricare la negatività
-                        ic("\n\nA")
                         simplified_num_tg_idx = idx_couple[0]
                         simplified_den_tg_idx = idx_couple[1]
                         negate_nd = 0 if count_num_tgs > count_den_tgs else 1  # 0 se bisogna negativizzare un tg al num, 1 se al den
@@ -1282,13 +1232,10 @@ class Expression():
                 simplified_expr_lR = [[], []]
                 simplified_expr_lR[0] = [tg for i_tg, tg in enumerate(simplified_expr.list_repr[0]) if i_tg != simplified_num_tg_idx]
                 simplified_expr_lR[1] = [tg for i_tg, tg in enumerate(simplified_expr.list_repr[1]) if i_tg != simplified_den_tg_idx]
-                ic(simplified_expr_lR)
 
                 if negate_nd == 0:
-                    ic("\n\n\nAA")
                     simplified_expr_lR[0][0] = [-term for term in simplified_expr_lR[0][0]]  # viene preso il primo index e vengono negativizzati tutti i termini
                 elif negate_nd == 1:
-                    ic("\n\n\nAA")
                     simplified_expr_lR[1][0] = [-term for term in simplified_expr_lR[1][0]]  # viene preso il primo index e vengono negativizzati tutti i termini
 
                 # in caso vengono eliminati tutti i tg al num o al den
@@ -1296,7 +1243,6 @@ class Expression():
                 simplified_expr_lR[1] = simplified_expr_lR[1] if simplified_expr_lR[1] else [[InfComp_num(1)]]
 
                 simplified_expr = Expression(list_repr=simplified_expr_lR)
-            ic(simplified_expr.to_str())
 
         return simplified_expr
 
@@ -1364,7 +1310,6 @@ class Expression():
 
 
     def eval(self, return_expr=True):
-        # ic(self.to_str())
         if return_expr:
             evalued_obj = eval(self.to_str())
             if type(evalued_obj) == Expression:
@@ -1412,23 +1357,18 @@ class Expression():
                         terms = [i for i in list_repr[i_nd][-1]]
                         list_repr[i_nd][-1] = [f"({t} / {f_args[i_nd][0] * f_args[i_nd][1]})" for t in terms]
                         a = [f"({t} / {f_args[i_nd][0] * f_args[i_nd][1]})" for t in terms]
-                        ic(a)
 
 
-            # ic(list_repr)
             steps.append({"expr": Expression(list_repr=list_repr), "lim": True, "desc": "Scomposizione in base al termine con il grado massimo"})
 
             eval_list_repr = copy.deepcopy(list_repr)
             for i_nd, nd in enumerate(list_repr):
                 if go_on[i_nd]:
                     # viene fatta l'operazione: (.../x*y)  /  (.../x)
-                    ic([i for i in list_repr[i_nd][-1]])
                     eval_list_repr[i_nd][-1] = [eval(i) for i in list_repr[i_nd][-1]]
-                    ic(eval_list_repr)
 
             steps.append({"expr": Expression(list_repr=eval_list_repr), "lim": True, "desc": "Calcolo delle divisioni"})
 
-            ic(Expression(list_repr=eval_list_repr).to_str())
 
             return steps, Expression(list_repr=eval_list_repr)
 
@@ -1443,7 +1383,6 @@ class Expression():
                 mode = mode.replace(f" {term_name} ", f" {str(term)} ")
                 mode = mode.replace(f" {term_name}.", f" {str(term)}.")
 
-            # ic(mode)
 
             return Expression(str_exp=mode)
 
@@ -1453,24 +1392,16 @@ class Expression():
         copy_expr = copy.deepcopy(self)
 
         check_idxs = [[i_nd, i_tg] for i_nd, nd in enumerate(copy_expr.list_repr) for i_tg in range(len(nd))]  # all'inizio bisogna controllare tutti gli idxs della list repr
-        # ic(check_idxs)
 
         while check_idxs:  # finchè check_idxs non sarà vuoto
-            # ic(copy_expr.list_repr)
 
             new_check_idxs = []  # vengono svuotati i check idx in modo da avere dentro solo quelli di questo iter
 
             for i_nd, nd in enumerate(copy_expr.list_repr):
-                ic(nd)
-                ic(i_nd)
                 for i_tg, tg in enumerate(nd):
-                    ic(i_tg)
                     if [i_nd, i_tg] in check_idxs:  # viene fatto solo se è nei check idxs
 
                         terms = [i for i in tg]
-                        ic(tg)
-                        ic([str(i) for i in terms])
-                        # ic(terms)
 
                         if len(terms) > 1:  # se è 1 salta direttamente alla fine senza aggiungere niente
 
@@ -1481,16 +1412,13 @@ class Expression():
 
                             num_gcd, fact_gcd = find_gcd(terms, output_type="separated")
                             if fact_gcd != 1 or num_gcd.num != 1:
-                                ic("\nGCD")
                                 if separation:
-                                    ic(separation)
                                     steps, expr = self.factorize(list_repr=[[copy_expr.list_repr[i_nd][i_tg]]], mode="x*y * (.../x*y)", f_args=[[num_gcd, fact_gcd]])
 
                                     # eliminzione del tg che c'era prima
                                     del copy_expr.list_repr[i_nd][i_tg]
 
                                     gcd_exponent = fact_gcd.exponent
-                                    ic(gcd_exponent)
 
                                     copy_expr.list_repr[i_nd].insert(i_tg, expr.list_repr[0][0])  # N *
                                     for i in range(int(gcd_exponent)):
@@ -1504,7 +1432,6 @@ class Expression():
                                     del copy_expr.list_repr[i_nd][i_tg]
                                     copy_expr.list_repr[i_nd].insert(i_tg, expr.list_repr[0][0])
                                     copy_expr.list_repr[i_nd].insert(i_tg+1, expr.list_repr[0][1])
-                                # ic(expr.list_repr)
                                 # eliminazione del vecchio term group e sostituzione con i 2 nuovi della scomposizione gcd
 
                                 new_check_idxs.append([i_nd, i_tg+1])  # controlliamo solo il secondo tg perchè il primo ha un solo termine
@@ -1515,7 +1442,6 @@ class Expression():
                                 mul = term_nums[0] * term_nums[1]
                                 if mul.den == 1:
                                     if mul < 0 and is_square(abs(terms[0])) and is_square(abs(terms[1])) and terms[0].exponent == 2:
-                                        ic("\nSOMMA * DIFF")
 
                                         # a e b diventano positivi in qualsiasi caso (visto che il meno è in str_factorize) e viene applicata la radice essendo quadrati
                                         terms_dict = dict(a = abs(terms[0]).root(2)[0],  # 0: prendiamo il primo elemento della lista, che è la radice positiva,
@@ -1536,7 +1462,6 @@ class Expression():
 
                             # TRINOMIO
                             elif len(terms) == 3:
-                                ic("\nTRINOMIO")
 
                                 # DA TRINOMIO A QUADRINOMIO (non so come si chiama)
 
@@ -1589,7 +1514,6 @@ class Expression():
 
                             # QUADRINOMIO
                             elif len(terms) == 4:
-                                ic("\nRAGGRUPPAMENTO PARZIALE")
                                 # RAGGRUPPAMENTO PARZIALE
 
                                 list_idxs = [i for i in range(4)]
@@ -1599,21 +1523,15 @@ class Expression():
                                     secon_idx = i+1
                                     gcds = []
                                     couple_1 = [terms[0], terms[i+1]]
-                                    ic([str(i) for i in couple_1])
                                     gcds.append(find_gcd(couple_1))
-                                    ic(str(gcds[0]))
 
                                     remaining_list_idxs = [i for i in list_idxs if i not in [first_idx, secon_idx]]  # idxs rimanenti, nel commento sopra soono [2,3], [1,3], [1,2]
                                     couple_2 = [terms[remaining_list_idxs[0]], terms[remaining_list_idxs[1]]]
-                                    ic([str(i) for i in couple_2])
                                     gcds.append(find_gcd(couple_2))
-                                    ic(str(gcds[1]))
 
                                     factorized_couples = []
                                     factorized_couples.append([i/gcds[0] for i in couple_1])
                                     factorized_couples.append([i/gcds[1] for i in couple_2])
-                                    ic([str(i) for i in factorized_couples[0]])
-                                    ic([str(i) for i in factorized_couples[1]])
 
                                     neg_terms_mask = [[], []]  # es: primo termine e terzo termine positivi, gli altri neg: neg_terms_mask = [[0, 1],[0, 1]]
                                     for i, f_couple_list in enumerate([factorized_couples[0], factorized_couples[1]]):
@@ -1625,9 +1543,7 @@ class Expression():
                                                 neg_terms_mask[i].append(0)
 
                                     abs_f_c1 = {str(abs(i)) for i in factorized_couples[0]}
-                                    ic(abs_f_c1)
                                     abs_f_c2 = {str(abs(i)) for i in factorized_couples[1]}
-                                    ic(abs_f_c2)
 
                                     def is_valid_neg(neg_terms_masks):
                                         """ False: coppia sbagliata inutilizzabile
@@ -1666,8 +1582,6 @@ class Expression():
                                                           b = gcds[1],
                                                           c = factorized_couples[0][0],
                                                           d = factorized_couples[0][1])
-                                        ic(terms_dict)
-                                        ic([str(i) for i in terms_dict.values()])
 
                                         del copy_expr.list_repr[i_nd][i_tg]
                                         expr = self.factorize(mode="( a + b ) * ( c + d )", f_args=terms_dict)
@@ -1730,14 +1644,12 @@ class Expression():
 
                 # 3 TERMINI, (X^2 + X + N)
                 elif len(tg) == 3:
-                    ic(tg)
                     if tg[0].exponent == 2 and tg[1].exponent == 1 and type(tg[2]) == InfComp_num:
                         a = tg[0].coefficient
                         b = tg[1].coefficient
                         c = tg[2]
 
                         delta = (b**2 - a*c*4).root(2)
-                        ic(delta)
 
                         if delta:  # solo se il delta non è negativo
                             if type(delta) == list:
@@ -1752,7 +1664,6 @@ class Expression():
 
     def to_str(self, type="str"):
         str_ = ""
-        # ic(self.list_repr)
 
         for i_nd, num_denum in enumerate(self.list_repr):
             str_ += "( "
@@ -1794,7 +1705,6 @@ class Expression():
             html_str, html_str_end = ("", "") if len(self.list_repr) == 1 else ("<mfrac>", "</mfrac>")
 
         list_repr = copy.deepcopy(self.list_repr)
-        # ic(list_repr)
         unsolved_idxs = []
 
         # facciamo in modo che è come se solve non esistesse (quindi tutti i terms con eval), ma lo sostituiremo dopo alle x
@@ -1810,7 +1720,6 @@ class Expression():
                                 term = eval(term)
 
                             list_repr[i_nd][i_tg][i_t] = term
-        # ic(list_repr)
 
         for i_nd, num_denum in enumerate(list_repr):
             html_str += "<mrow>"
@@ -1821,7 +1730,6 @@ class Expression():
                 terms = [i for i in term_group]
 
                 for i_t, term in enumerate(terms):
-                    # ic(term)
 
                     if type(term) == Factor:
                         term_num = term.coefficient.as_decimal()

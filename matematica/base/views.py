@@ -20,8 +20,6 @@ ic.configureOutput(prefix="> ", includeContext=True)
 
 from django.http import JsonResponse
 from django.shortcuts import render
-from plotly.offline import plot
-import plotly.graph_objs as go
 
 lower_alphabet = [chr(i+97) for i in range(26)]
 lower_alphabet_no_x = [i for i in lower_alphabet if i != "x"]
@@ -48,8 +46,8 @@ def calcolo_limiti(request):
     context = {"expr_placeholder": "", "lim_placeholder": ""}
 
     if request.method == "POST":
-        ic(request)
-        ic(request.POST)
+        # ic(request)
+        # ic(request.POST)
         expr = request.POST.get("expr")
         lim = request.POST.get("lim")
 
@@ -59,7 +57,7 @@ def calcolo_limiti(request):
 
         if "Expression" in str(type(result)):
             result = result.eval(return_expr=False)
-        ic(result)
+        # ic(result)
 
         base_form_lambda = base_form_expr.to_str("lambda")
 
@@ -108,7 +106,7 @@ def ajax_text2math(request):
                 text = calcolo.lim_to_html(lim)
 
         except Exception as exc:
-            ic(exc)
+            # ic(exc)
             text = "error"
 
     json_data = {"text": text}
