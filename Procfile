@@ -1,1 +1,1 @@
-web: gunicorn matematica.wsgi
+web: gunicorn matematica.wsgi --log-file -
