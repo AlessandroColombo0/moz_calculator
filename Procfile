@@ -1,1 +1,1 @@
-web: gunicorn matematica.matemtica.wsgi
+web: gunicorn matematica.matematica.wsgi
