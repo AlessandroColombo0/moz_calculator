@@ -1,16 +1,10 @@
 from icecream import ic
 ic.configureOutput(prefix="> ", includeContext=True)
 
-import plotly.express as px
-
 import numpy as np
-import pandas as pd
 from plotly.offline import plot
 import plotly.graph_objs as go
-from . import calcolo, Mat
-
-
-
+from . import calcolo
 
 
 def grafico_funzione(base_form_lambda, lim, x_disconts, result):
